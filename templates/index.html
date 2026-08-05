@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Бесплатный онлайн-сервис для автоматического добавления UTM-меток в гиперссылки документов Word (.docx). Быстрая разметка статей для VK, Telegram и Дзен.">
+        <title>Генератор UTM-меток для файлов Word (.docx) онлайн</title>
+        <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='favicon.svg') }}">
+    </head>
+    <body>
+
+<div class="container">
+    <div class="header-wrapper">
+        <h1>Автоматическая UTM-разметка DOCX статей</h1>
+        <button id="openHelpBtn">? Инструкция</button>
+    </div>
+    <div id="helpModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>📋 Как пользоваться генератором?</h2>
+        <div class="instruction-text">
+            <!-- БЛОК 1: Инструкция для одиночной загрузки -->
+    <div id="helpSingleText">
+        <p><strong>Шаг 1.</strong> Подготовьте вашу статью в формате <code>.docx</code>. Убедитесь, что внутри текста уже вставлены обычные ссылки на ваш сайт.</p>
+        <p><strong>Шаг 2.</strong> Введите название кампании латиницей (например: <code>promo_autumn</code>). Оно подставится в параметр <code>utm_campaign</code>.</p>
+        <p><strong>Шаг 3.</strong> Отметьте галочками нужные соцсети. Если вашей площадки нет в списке, введите её название в поле «Добавить свою».</p>
+        <p><strong>Шаг 4.</strong> Загрузите документ и нажмите синюю кнопку. Сервер обработает ссылки и автоматически скачает <code>.zip</code> архив с готовыми статьями.</p>
+    </div>
+
+    <!-- БЛОК 2: Инструкция для массовой загрузки -->
+    <div id="helpBatchText" style="display: none;">
+        <p><strong>Шаг 1.</strong> Скачайте наш готовый Excel-шаблон манифеста по ссылке на вкладке массовой загрузки.</p>
+        <p><strong>Шаг 2.</strong> Заполните таблицу: укажите точные имена файлов статей, названия кампаний и нужные площадки через запятую.</p>
+        <p><strong>Шаг 3.</strong> Упакуйте все ваши статьи <code>.docx</code> в один обычный <code>.zip</code> архив. Имена файлов должны строго совпадать с таблицей! Саму таблицу в архив не кладите.</p>
+        <p><strong>Шаг 4.</strong> Загрузите заполненный Excel-файл и ZIP-архив на сайт, затем нажмите кнопку обработки. Сервер выдаст вам готовый архив со всеми размеченными документами.</p>
+    </div>
+
+    <p class="security-note">🔒 <em>Безопасность: мы не храним ваши файлы. Все документы автоматически удаляются с сервера сразу после генерации.</em></p>
+        </div>
+        <button id="closeHelpBtn">Понятно</button>
+    </div>
+</div>
+   <div class="tab-container">
+    <button id="tabSingle" class="tab-button active">Одна статья</button>
+    <button id="tabBatch" class="tab-button">Массовая загрузка</button>
+</div>
+
+<!-- ВКЛАДКА 1: ОДИНОЧНАЯ ЗАГРУЗКА -->
+<div id="singleFormBlock" class="tab-content active-content">
+    <form id="utmForm">
+        <div class="form-group">
+            <label for="campaign">Название кампании (utm_campaign):</label>
+            <input type="text" id="campaign" name="campaign_name" placeholder="например, winter_sale_2026" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Выберите площадки для разметки (utm_source):</label>
+            <div class="checkbox-grid">
+                <label><input type="checkbox" name="platforms" value="vk" checked> VK</label>
+                <label><input type="checkbox" name="platforms" value="telegram" checked> Telegram</label>
+                <label><input type="checkbox" name="platforms" value="dzen"> Dzen</label>
+                <label><input type="checkbox" name="platforms" value="blogger"> Blogger</label>
+                <label><input type="checkbox" name="platforms" value="livejournal"> LiveJournal</label>
+                <label><input type="checkbox" name="platforms" value="promopages"> PromoPages</label>
+            </div>
+            <label for="custom_platform" class="hint-label">Добавить свои площадки (через запятую, можно на русском):</label>
+            <input type="text" id="custom_platform" name="custom_platform" placeholder="например: vc_ru, habr, pikabu" \
+            pattern="^[a-zA-Zа-яА-Я0-9_,\- ]+$" title="Разрешены русские и английские буквы, цифры, дефис, подчеркивание, запятые и пробелы">
+        </div>
+        
+        <div class="form-group">
+            <label>Документ статьи:</label>
+            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                <span class="file-upload-text">📄 Кликните, чтобы выбрать файл .docx</span>
+                <input type="file" id="fileInput" name="file" accept=".docx" required>
+                <div class="file-name" id="fileName"></div>
+            </div>
+        </div>
+        
+        <button type="submit" class="submit-btn" id="submitBtn">Сгенерировать и скачать пакет</button>
+    </form>
+</div>
+
+<!-- ВКЛАДКА 2: МАССОВАЯ ЗАГРУЗКА (Новая форма под Excel) -->
+<div id="batchFormBlock" class="tab-content">
+    <div class="download-template-box">
+        <span class="template-icon">📊</span>
+        <div>
+            <p><strong>Нужен шаблон манифеста?</strong></p>
+            <a href="/static/manifest_template.xlsx" download class="template-link">Скачать шаблон Excel (.xlsx)</a>
+        </div>
+    </div>
+
+    <form id="batchUtmForm">
+        <div class="form-group">
+            <label>Заполненный Excel-манифест:</label>
+            <div class="file-upload" onclick="document.getElementById('excelInput').click()">
+                <span class="file-upload-text">📈 Выберите файл таблицы .xlsx</span>
+                <input type="file" id="excelInput" name="excel_file" accept=".xlsx" required>
+                <div class="file-name" id="excelFileName"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>ZIP-архив со статьями Word:</label>
+            <div class="file-upload" onclick="document.getElementById('zipInput').click()">
+                <span class="file-upload-text">📦 Выберите архив .zip со статьями</span>
+                <input type="file" id="zipInput" name="zip_file" accept=".zip" required>
+                <div class="file-name" id="zipFileName"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="batchSubmitBtn">Обработать и скачать пакет</button>
+    </form>
+</div>
+
+<div id="status"></div>
+</div>
+<script src="{{ url_for('static', path='script.js')}}"></script>
+</body>
+
+</html>
