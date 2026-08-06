@@ -205,15 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const spoilerContent = document.getElementById('spoilerContent');
     
     if (spoilerBtn && spoilerContent) {
-        spoilerBtn.addEventListener('click', (e) => {
+        spoilerBtn.onclick = function(e) {
             e.preventDefault();
-            if (spoilerContent.style.display === 'none') {
+            e.stopPropagation();
+            if (spoilerContent.style.display === 'none' || spoilerContent.style.display === '') {
                 spoilerContent.style.display = 'block';
                 spoilerBtn.innerText = "⚙️ Дополнительные параметры (необязательно) ▴";
             } else {
                 spoilerContent.style.display = 'none';
                 spoilerBtn.innerText = "⚙️ Дополнительные параметры (необязательно) ▾";
             }
-        });
+        };
     }
 });
