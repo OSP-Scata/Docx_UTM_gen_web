@@ -104,32 +104,33 @@ async def favicon():
 
 
 def modify_url(source_url: str, campaign: str, source: str, medium: str, content: str, term: str) -> str:
-    """Блок раздельной сборки: принимает оригинальный URL и безопасно приклеивает 
-    к нему только заполненные UTM-параметры без дублирования знаков "?".
+    """Принимает оригинальный URL и безопасно приклеивает к нему только 
+    заполненные UTM-параметры, учитывая наличие существующих GET-компонентов.
     """
     source_url = source_url.strip()
     if not source_url:
         return source_url
 
     params = [
-        f"utm_source={source}",
-        f"utm_medium={medium}",
-        f"utm_campaign={campaign}"
+        f'utm_source={source}',
+        f'utm_medium={medium}',
+        f'utm_campaign={campaign}'
     ]
 
     if content and content.strip():
-        params.append(f"utm_content={content.strip()}")
+        params.append(f'utm_content={content.strip()}')
     if term and term.strip():
-        params.append(f"utm_term={term.strip()}")
+        params.append(f'utm_term={term.strip()}')
 
-    utm_string = "&".join(params)
-    if "?" in source_url:
-        if source_url.endswith("?") or source_url.endswith("&"):
-            return f"{source_url}{utm_string}"
+    utm_string = '&'.join(params)
+
+    if '?' in source_url:
+        if source_url.endswith('?') or source_url.endswith('&'):
+            return f'{source_url}{utm_string}'
         else:
-            return f"{source_url}&{utm_string}"
+            return f'{source_url}&{utm_string}'
     else:
-        return f"{source_url}?{utm_string}"
+        return f'{source_url}?{utm_string}'
 
 
 def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, content: str, term: str, output_path: str):
