@@ -17,8 +17,8 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from openpyxl import load_workbook
 from zipfile import ZipFile
 
-mimetypes.add_type('text/css', '.css')
-mimetypes.add_type('application/javascript', '.js')
+mimetypes.add_type("text/css", ".css")
+mimetypes.add_type("application/javascript", ".js")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,11 +35,11 @@ def cyrillic_to_latin(text: str) -> str:
     text = text.strip().lower()
     # Словарь соответствия русских и английских букв (ГОСТ-ориентированный)
     rules = {
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-        'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-        'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-        'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-        'ы': 'y', 'э': 'e', 'ю': 'yu', 'я': 'ya', 'ъ': '', 'ь': ''
+        "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+        "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+        "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+        "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
+        "ы": "y", "э": "e", "ю": "yu", "я": "ya", "ъ": "", "ь": ""
     }
     output = []
     for char in text:
@@ -47,10 +47,10 @@ def cyrillic_to_latin(text: str) -> str:
             output.append(rules[char])
         else:
             output.append(char)
-    translated_text = ''.join(output)
-    translated_text = translated_text.replace(' ', '_').replace('-', '_')
-    translated_text = re.sub(r'[^a-z0-9_]', '', translated_text)
-    return translated_text if translated_text else 'campaign'
+    translated_text = "".join(output)
+    translated_text = translated_text.replace(" ", "_").replace("-", "_")
+    translated_text = re.sub(r"[^a-z0-9_]", "", translated_text)
+    return translated_text if translated_text else "campaign"
 
 
 @asynccontextmanager
@@ -95,41 +95,41 @@ async def read_index(request: Request):
                                       context={"request": request})
 
 
-@app.get('/favicon.ico', include_in_schema=False)
+@app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return FileResponse(
-        os.path.join('static', 'favicon.svg'),
-        media_type='image/svg+xml'
+        os.path.join("static", "favicon.svg"),
+        media_type="image/svg+xml"
     )
 
 
 def modify_url(source_url: str, campaign: str, source: str, medium: str, content: str, term: str) -> str:
     """Блок раздельной сборки: принимает оригинальный URL и безопасно приклеивает 
-    к нему только заполненные UTM-параметры без дублирования знаков '?'.
+    к нему только заполненные UTM-параметры без дублирования знаков "?".
     """
     source_url = source_url.strip()
     if not source_url:
         return source_url
 
     params = [
-        f'utm_source={source}',
-        f'utm_medium={medium}',
-        f'utm_campaign={campaign}'
+        f"utm_source={source}",
+        f"utm_medium={medium}",
+        f"utm_campaign={campaign}"
     ]
 
     if content and content.strip():
-        params.append(f'utm_content={content.strip()}')
+        params.append(f"utm_content={content.strip()}")
     if term and term.strip():
-        params.append(f'utm_term={term.strip()}')
+        params.append(f"utm_term={term.strip()}")
 
-    utm_string = '&'.join(params)
-    if '?' in source_url:
-        if source_url.endswith('?') or source_url.endswith('&'):
-            return f'{source_url}{utm_string}'
+    utm_string = "&".join(params)
+    if "?" in source_url:
+        if source_url.endswith("?") or source_url.endswith("&"):
+            return f"{source_url}{utm_string}"
         else:
-            return f'{source_url}&{utm_string}'
+            return f"{source_url}&{utm_string}"
     else:
-        return f'{source_url}?{utm_string}'
+        return f"{source_url}?{utm_string}"
 
 
 def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, content: str, term: str, output_path: str):
@@ -140,10 +140,8 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
 
     # Разметка скрытых связей документа (основной массив гиперссылок в Word)
     rels = doc.part.rels
-    for rel_id in rels:
-        rel = rels[rel_id]
+    for rel in rels:
         if rel.reltype == RT.HYPERLINK:
-            # Вызываем нашу новую функцию раздельной сборки
             new_url = modify_url(
                 source_url=rel.target_ref,
                 campaign=campaign,
@@ -156,9 +154,9 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
 
     # Разметка текстовых полей параграфов и таблиц (для защиты структуры документа)
     for p in doc.paragraphs:
-        if 'hyperlink' in p._element.xml:
-            for node in p._element.xpath('.//w:hyperlink'):
-                r_id = node.get('{http://openxmlformats.org}id')
+        if "hyperlink" in p._element.xml:
+            for node in p._element.xpath(".//w:hyperlink"):
+                r_id = node.get("{http://openxmlformats.org}id")
                 if r_id and r_id in rels:
                     node_rel = rels[r_id]
                     new_url = modify_url(
@@ -175,9 +173,9 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
         for row in table.rows:
             for cell in row.cells:
                 for p in cell.paragraphs:
-                    if 'hyperlink' in p._element.xml:
-                        for node in p._element.xpath('.//w:hyperlink'):
-                            r_id = node.get('{http://openxmlformats.org}id')
+                    if "hyperlink" in p._element.xml:
+                        for node in p._element.xpath(".//w:hyperlink"):
+                            r_id = node.get("{http://openxmlformats.org}id")
                             if r_id and r_id in rels:
                                 node_rel = rels[r_id]
                                 new_url = modify_url(
@@ -203,28 +201,37 @@ def remove_file(path: str):
         logger.error(f"Ошибка обработки файла: {str(e)}")
 
 
-@app.post('/generate-utm/')
+@app.post("/generate-utm/")
 async def generate_utm_api(
     background_tasks: BackgroundTasks,
     campaign_name: str = Form(...),
+    utm_medium: str = Form(...),
+    custom_medium: str = Form(None),
+    utm_content: str = Form(None),
+    utm_term: str = Form(None),
     platforms: list[str] = Form(None),
     custom_platform: str = Form(None),
     file: UploadFile = File(...)
 ):
     clean_campaign = cyrillic_to_latin(campaign_name)
+    chosen_medium = custom_medium if utm_medium == "custom" else utm_medium
+    clean_medium = cyrillic_to_latin(
+        chosen_medium) if chosen_medium else "article"
+    clean_content = cyrillic_to_latin(utm_content) if utm_content else ""
+    clean_term = cyrillic_to_latin(utm_term) if utm_term else ""
 
     # Валидация площадок
     final_platforms = []
     if platforms:
         final_platforms.extend(platforms)
     if custom_platform and custom_platform.strip():
-        if not re.match(r'^[a-zа-я0-9_,\- ]+$', custom_platform.strip().lower()):
+        if not re.match(r"^[a-zа-я0-9_,\- ]+$", custom_platform.strip().lower()):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Названия площадок содержат недопустимые спецсимволы! Разрешены только буквы, цифры и запятые.'
+                detail="Названия площадок содержат недопустимые спецсимволы! Разрешены только буквы, цифры и запятые."
             )
         custom_list = [p.strip()
-                       for p in custom_platform.lower().split(',') if p.strip()]
+                       for p in custom_platform.lower().split(",") if p.strip()]
 
         for platform_item in custom_list:
             clean_custom = cyrillic_to_latin(platform_item)
@@ -234,41 +241,41 @@ async def generate_utm_api(
 
     if not final_platforms:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='Выберите или введите хотя бы одну площадку.')
+                            detail="Выберите или введите хотя бы одну площадку.")
 
     # Проверки безопасности
     if file.size > MAX_FILE_SIZE:
         raise HTTPException(
-            status_code=status.HTTP_413_CONTENT_TOO_LARGE, detail='Файл слишком большой. Не более 10 МБ.')
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE, detail="Файл слишком большой. Не более 10 МБ.")
     if file.content_type != VALID_MIME_TYPE:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail='Некорректный тип файла.')
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Некорректный тип файла.")
 
-    session_id = f'session_{int(time.time())}'
+    session_id = f"session_{int(time.time())}"
     session_dir = os.path.join(TEMP_DIR, session_id)
     os.makedirs(session_dir, exist_ok=True)
 
-    uploaded_file_path = os.path.join(session_dir, 'source_article.docx')
-    with open(uploaded_file_path, 'wb') as buffer:
+    uploaded_file_path = os.path.join(session_dir, "source_article.docx")
+    with open(uploaded_file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     created_files = []
     raw_filename = os.path.splitext(file.filename)[0]
-    safe_base_name = ''.join(
-        [c for c in raw_filename if c.isalnum() or c in (' ', '_', '-')]).strip()
+    safe_base_name = "".join(
+        [c for c in raw_filename if c.isalnum() or c in (" ", "_", "-")]).strip()
     if not safe_base_name:
-        safe_base_name = 'article'
+        safe_base_name = "article"
 
     try:
         for platform in final_platforms:
-            out_filename = f'{safe_base_name}_{platform}.docx'
+            out_filename = f"{safe_base_name}_{platform}.docx"
             out_file_path = os.path.join(session_dir, out_filename)
             add_utm_to_docx(uploaded_file_path, clean_campaign,
-                            platform, out_file_path)
+                            platform, clean_medium, clean_content, clean_term, out_file_path)
             created_files.append(out_file_path)
 
-        zip_path = os.path.join(TEMP_DIR, f'{session_id}_packed.zip')
-        with ZipFile(zip_path, 'w') as zipf:
+        zip_path = os.path.join(TEMP_DIR, f"{session_id}_packed.zip")
+        with ZipFile(zip_path, "w") as zipf:
             for f_path in created_files:
                 zipf.write(f_path, os.path.basename(f_path))
 
@@ -277,49 +284,49 @@ async def generate_utm_api(
 
         return FileResponse(
             path=zip_path,
-            filename=f'{safe_base_name}_utm_packed.zip',
-            media_type='application/zip'
+            filename=f"{safe_base_name}_utm_packed.zip",
+            media_type="application/zip"
         )
     except Exception as e:
-        logger.error(f'Ошибка обработки: {e}')
+        logger.error(f"Ошибка обработки: {e}")
         if os.path.exists(session_dir):
             shutil.rmtree(session_dir)
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail='Ошибка обработки документа.')
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Ошибка обработки документа.")
 
 
 # массовая обработка
-@app.post('/generate-utm-batch/')
+@app.post("/generate-utm-batch/")
 async def generate_utm_batch_api(
     background_tasks: BackgroundTasks,
     excel_file: UploadFile = File(..., description="Файл манифеста .xlsx"),
     zip_file: UploadFile = File(..., description="Архив со статьями .zip")
 ):
     # Проверка форматов на бэкенде
-    if not excel_file.filename.endswith('.xlsx'):
+    if not excel_file.filename.endswith(".xlsx"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail='Манифест должен быть в формате .xlsx')
-    if not zip_file.filename.endswith('.zip'):
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Манифест должен быть в формате .xlsx")
+    if not zip_file.filename.endswith(".zip"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail='Архив файлов должен быть в формате .zip')
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Архив файлов должен быть в формате .zip")
 
-    session_id = f'batch_{int(time.time())}'
+    session_id = f"batch_{int(time.time())}"
     session_dir = os.path.join(TEMP_DIR, session_id)
 
-    extracted_dir = os.path.join(session_dir, 'extracted')
-    output_dir = os.path.join(session_dir, 'output')
+    extracted_dir = os.path.join(session_dir, "extracted")
+    output_dir = os.path.join(session_dir, "output")
     os.makedirs(extracted_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
 
-    excel_path = os.path.join(session_dir, 'manifest.xlsx')
-    with open(excel_path, 'wb') as buffer:
+    excel_path = os.path.join(session_dir, "manifest.xlsx")
+    with open(excel_path, "wb") as buffer:
         shutil.copyfileobj(excel_file.file, buffer)
 
-    zip_path = os.path.join(session_dir, 'input.zip')
-    with open(zip_path, 'wb') as buffer:
+    zip_path = os.path.join(session_dir, "input.zip")
+    with open(zip_path, "wb") as buffer:
         shutil.copyfileobj(zip_file.file, buffer)
 
-    with ZipFile(zip_path, 'r') as zip_ref:
+    with ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(extracted_dir)
 
     try:
@@ -337,19 +344,19 @@ async def generate_utm_batch_api(
 
             clean_campaign = cyrillic_to_latin(campaign_raw)
             platforms = [cyrillic_to_latin(
-                p) for p in sources_raw.split(',') if p.strip()]
+                p) for p in sources_raw.split(",") if p.strip()]
 
             input_docx_path = os.path.join(extracted_dir, filename)
 
             if not os.path.exists(input_docx_path):
                 logger.warning(
-                    f'Файл {filename} указан в Excel, но отсутствует в ZIP-архиве.')
+                    f"Файл {filename} указан в Excel, но отсутствует в ZIP-архиве.")
                 continue
 
             base_name = os.path.splitext(filename)[0]
 
             for platform in platforms:
-                out_filename = f'{base_name}_{platform}.docx'
+                out_filename = f"{base_name}_{platform}.docx"
                 out_file_path = os.path.join(output_dir, out_filename)
                 add_utm_to_docx(input_docx_path, clean_campaign,
                                 platform, out_file_path)
@@ -359,10 +366,10 @@ async def generate_utm_batch_api(
 
         if not created_files:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail='Не удалось обработать ни один файл.')
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Не удалось обработать ни один файл.")
 
-        final_zip_path = os.path.join(TEMP_DIR, f'{session_id}_final.zip')
-        with ZipFile(final_zip_path, 'w') as zipf:
+        final_zip_path = os.path.join(TEMP_DIR, f"{session_id}_final.zip")
+        with ZipFile(final_zip_path, "w") as zipf:
             for f_path in created_files:
                 zipf.write(f_path, os.path.basename(f_path))
 
@@ -371,13 +378,13 @@ async def generate_utm_batch_api(
 
         return FileResponse(
             path=final_zip_path,
-            filename='mass_utm_packed.zip',
-            media_type='application/zip'
+            filename="mass_utm_packed.zip",
+            media_type="application/zip"
         )
 
     except Exception as e:
-        logger.error(f'Ошибка пакетной обработки: {e}')
+        logger.error(f"Ошибка пакетной обработки: {e}")
         if os.path.exists(session_dir):
             shutil.rmtree(session_dir)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Ошибка сервера при пакетной обработке.')
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ошибка сервера при пакетной обработке.")
