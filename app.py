@@ -83,10 +83,6 @@ app = FastAPI(title="UTM Tag Generator for DOCX", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
-UTM_SOURCE = "?utm_source="
-MEDIUM = "&utm_medium="
-CAMPAIGN = "&utm_campaign="
-FIN = "&utm_content=article"
 TEMP_DIR = "web_tmp"
 MAX_FILE_SIZE = 10 * 1024 * 1024
 VALID_MIME_TYPE = "application/vnd.openxmlformats-officedocument.\
@@ -107,24 +103,93 @@ async def favicon():
     )
 
 
-def add_utm_to_docx(filepath, campaign_name, platform_name, out_file):
-    # логика расстановки меток
-    if isinstance(input_path, tuple):
-        input_path = input_path[0]
-    if isinstance(out_file, tuple):
-        out_file = out_file[0]
-    input_path = str(input_path)
-    out_file = str(out_file)
-    document = Document(filepath)
-    rels = document.part.rels
-    medium_type = "cpc" if platform_name == "promopages" else "blogs"
-    for rel in rels:
-        if rels[rel].reltype == RT.HYPERLINK:
-            old_url = rels[rel]._target
-            new_url = f"{old_url}{UTM_SOURCE}{platform_name}{MEDIUM}\
-                {medium_type}{CAMPAIGN}{campaign_name}{FIN}"
-            rels[rel]._target = new_url
-    document.save(out_file)
+def modify_url(source_url: str, campaign: str, source: str, medium: str, content: str, term: str) -> str:
+    """Блок раздельной сборки: принимает оригинальный URL и безопасно приклеивает 
+    к нему только заполненные UTM-параметры без дублирования знаков '?'.
+    """
+    source_url = source_url.strip()
+    if not source_url:
+        return source_url
+
+    params = [
+        f'utm_source={source}',
+        f'utm_medium={medium}',
+        f'utm_campaign={campaign}'
+    ]
+
+    if content and content.strip():
+        params.append(f'utm_content={content.strip()}')
+    if term and term.strip():
+        params.append(f'utm_term={term.strip()}')
+
+    utm_string = '&'.join(params)
+    if '?' in source_url:
+        if source_url.endswith('?') or source_url.endswith('&'):
+            return f'{source_url}{utm_string}'
+        else:
+            return f'{source_url}&{utm_string}'
+    else:
+        return f'{source_url}?{utm_string}'
+
+
+def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, content: str, term: str, output_path: str):
+    """Открывает файл .docx, проходит по всем параграфам, таблицам и связям,
+    находит гиперссылки и обновляет их через функцию modify_url.
+    """
+    doc = Document(input_path)
+
+    # Разметка скрытых связей документа (основной массив гиперссылок в Word)
+    rels = doc.part.rels
+    for rel_id in rels:
+        rel = rels[rel_id]
+        if rel.reltype == RT.HYPERLINK:
+            # Вызываем нашу новую функцию раздельной сборки
+            new_url = modify_url(
+                source_url=rel.target_ref,
+                campaign=campaign,
+                source=source,
+                medium=medium,
+                content=content,
+                term=term
+            )
+            rel._target = new_url
+
+    # Разметка текстовых полей параграфов и таблиц (для защиты структуры документа)
+    for p in doc.paragraphs:
+        if 'hyperlink' in p._element.xml:
+            for node in p._element.xpath('.//w:hyperlink'):
+                r_id = node.get('{http://openxmlformats.org}id')
+                if r_id and r_id in rels:
+                    node_rel = rels[r_id]
+                    new_url = modify_url(
+                        source_url=node_rel.target_ref,
+                        campaign=campaign,
+                        source=source,
+                        medium=medium,
+                        content=content,
+                        term=term
+                    )
+                    node_rel._target = new_url
+
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    if 'hyperlink' in p._element.xml:
+                        for node in p._element.xpath('.//w:hyperlink'):
+                            r_id = node.get('{http://openxmlformats.org}id')
+                            if r_id and r_id in rels:
+                                node_rel = rels[r_id]
+                                new_url = modify_url(
+                                    source_url=node_rel.target_ref,
+                                    campaign=campaign,
+                                    source=source,
+                                    medium=medium,
+                                    content=content,
+                                    term=term
+                                )
+                                node_rel._target = new_url
+    doc.save(output_path)
 
 
 def remove_file(path: str):

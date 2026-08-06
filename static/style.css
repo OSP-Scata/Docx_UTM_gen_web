@@ -313,7 +313,6 @@ button:hover {
     border-radius: 6px;
     transition: all 0.25s ease;
 }
-
 /* Иконка чашки кофе */
 .boosty-link span {
     font-size: 14px;
@@ -335,29 +334,24 @@ button:hover {
     width: 100%;
     position: relative;
 }
-
 /* Блок бренда как жесткий контейнер */
 .brand-box {
     display: flex;
     align-items: center;
     position: relative;
-    /* Создаем фиксированный отступ слева под размер логотипа (52px + 16px отступ) */
     padding-left: 68px; 
-    min-height: 52px; /* Высота равна высоте логотипа */
+    min-height: 52px;
 }
-
 /* ЛОГОТИП: Полная изоляция от капризов шрифта */
 .main-logo {
     width: 52px;
     height: 52px;
     display: block;
-    /* Вырываем логотип из текстового потока и прижимаем к левому краю по центру */
     position: absolute;
     left: 0;
     top: 50%;
-    transform: translateY(-50%); /* Математически идеальный центр по вертикали */
+    transform: translateY(-50%);
 }
-
 /* Текст заголовка */
 .brand-box h1 {
     font-size: 24px;
@@ -366,7 +360,32 @@ button:hover {
     padding: 0;
     text-align: left;
     line-height: 1.2;
-    /* Принудительное выравнивание текстового блока */
     display: inline-block;
     vertical-align: middle;
+}
+/* Селект для дополнительных параметров */
+.styled-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    outline: none;
+}
+/* Кнопка спойлера */
+.spoiler-title {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 10px;
+    text-align: left;
+}
+.spoiler-title:hover {
+    color: #1d4ed8;
 }

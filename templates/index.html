@@ -67,11 +67,26 @@
 <!-- ВКЛАДКА 1: ОДИНОЧНАЯ ЗАГРУЗКА -->
 <div id="singleFormBlock" class="tab-content active-content">
     <form id="utmForm">
+        <!-- 1. Название кампании -->
         <div class="form-group">
             <label for="campaign">Название кампании (utm_campaign):</label>
             <input type="text" id="campaign" name="campaign_name" placeholder="например, winter_sale_2026" autofocus required>
         </div>
         
+        <!-- 2. НОВОЕ: Тип трафика (utm_medium) -->
+        <div class="form-group">
+            <label for="medium">Тип трафика (utm_medium):</label>
+            <select id="medium" name="utm_medium" class="styled-select">
+                <option value="article" selected>article (статьи / лонгриды)</option>
+                <option value="social">social (социальные сети)</option>
+                <option value="cpc">cpc (платная реклама / промопосты)</option>
+                <option value="messenger">messenger (посты в каналах)</option>
+                <option value="custom">-- Ввести свое значение --</option>
+            </select>
+            <input type="text" id="custom_medium" name="custom_medium" placeholder="Введите свой utm_medium (например: blog)" style="display: none; margin-top: 8px;">
+        </div>
+
+        <!-- 3. Площадки -->
         <div class="form-group">
             <label>Выберите площадки для разметки (utm_source):</label>
             <div class="checkbox-grid">
@@ -79,15 +94,30 @@
                 <label><input type="checkbox" name="platforms" value="telegram" checked> Telegram</label>
                 <label><input type="checkbox" name="platforms" value="dzen"> Dzen</label>
                 <label><input type="checkbox" name="platforms" value="blogger"> Blogger</label>
-                <label><input type="checkbox" name="platforms" value="livejournal"> LiveJournal</label>
+                <label><input type="checkbox" name="platforms" value="lj"> LiveJournal</label>
                 <label><input type="checkbox" name="platforms" value="promopages"> PromoPages</label>
             </div>
             <label for="custom_platform" class="hint-label">Добавить свои площадки (через запятую, можно на русском):</label>
-            <input type="text" id="custom_platform" name="custom_platform" placeholder="например: vc_ru, habr, pikabu" \
-            pattern="^[a-zA-Zа-яА-Я0-9_,\- ]+$" title="Разрешены русские и английские буквы, цифры, дефис, подчеркивание, запятые и пробелы">
+            <input type="text" id="custom_platform" name="custom_platform" placeholder="например: хабр, пикабу">
         </div>
         
-        <div class="form-group">
+        <!-- 4. НОВОЕ: Спойлер с необязательными параметрами -->
+        <div class="spoiler-container">
+            <button type="button" id="spoilerBtn" class="spoiler-title">⚙️ Дополнительные параметры (необязательно) ▾</button>
+            <div id="spoilerContent" class="spoiler-content" style="display: none;">
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="utm_content">Содержимое кампании (utm_content):</label>
+                    <input type="text" id="utm_content" name="utm_content" placeholder="например, button_top или link_footer">
+                </div>
+                <div class="form-group">
+                    <label for="utm_term">Ключевое слово (utm_term):</label>
+                    <input type="text" id="utm_term" name="utm_term" placeholder="например, smm_tools">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5. Файл -->
+        <div class="form-group" style="margin-top: 15px;">
             <label>Документ статьи:</label>
             <div class="file-upload" onclick="document.getElementById('fileInput').click()">
                 <span class="file-upload-text">📄 Кликните, чтобы выбрать файл .docx</span>

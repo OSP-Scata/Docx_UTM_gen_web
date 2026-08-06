@@ -184,4 +184,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+     // выпадающий список utm_medium
+    const mediumSelect = document.getElementById('medium');
+    const customMediumInput = document.getElementById('custom_medium');
+    
+    if (mediumSelect && customMediumInput) {
+        mediumSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'custom') {
+                customMediumInput.style.display = 'block';
+                customMediumInput.required = true;
+            } else {
+                customMediumInput.style.display = 'none';
+                customMediumInput.required = false;
+            }
+        });
+    }
+
+    // спойлер доп.параметров
+    const spoilerBtn = document.getElementById('spoilerBtn');
+    const spoilerContent = document.getElementById('spoilerContent');
+    
+    if (spoilerBtn && spoilerContent) {
+        spoilerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (spoilerContent.style.display === 'none') {
+                spoilerContent.style.display = 'block';
+                spoilerBtn.innerText = "⚙️ Дополнительные параметры (необязательно) ▴";
+            } else {
+                spoilerContent.style.display = 'none';
+                spoilerBtn.innerText = "⚙️ Дополнительные параметры (необязательно) ▾";
+            }
+        });
+    }
 });
