@@ -341,10 +341,16 @@ async def generate_utm_batch_api(
             filename = str(row[0]).strip()
             campaign_raw = str(row[1]).strip()
             sources_raw = str(row[2]).strip()
+            medium_raw = str(row[3]).strip()
+            content_raw = str(row[4]).strip()
+            term_raw = str(row[5]).strip()
 
             clean_campaign = cyrillic_to_latin(campaign_raw)
             platforms = [cyrillic_to_latin(
                 p) for p in sources_raw.split(",") if p.strip()]
+            clean_medium = cyrillic_to_latin(medium_raw)
+            clean_content = cyrillic_to_latin(content_raw)
+            clean_term = cyrillic_to_latin(term_raw)
 
             input_docx_path = os.path.join(extracted_dir, filename)
 
@@ -359,7 +365,7 @@ async def generate_utm_batch_api(
                 out_filename = f"{base_name}_{platform}.docx"
                 out_file_path = os.path.join(output_dir, out_filename)
                 add_utm_to_docx(input_docx_path, clean_campaign,
-                                platform, out_file_path)
+                                platform, clean_medium, clean_content, clean_term, out_file_path)
                 created_files.append(out_file_path)
 
         wb.close()
