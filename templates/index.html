@@ -6,15 +6,63 @@
         <meta name="description" content="Бесплатный онлайн-сервис для автоматического добавления UTM-меток в гиперссылки документов Word (.docx). Быстрая разметка статей для VK, Telegram и Дзен.">
         <title>Генератор UTM-меток для файлов Word (.docx) онлайн</title>
         <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
-        <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='favicon.svg') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='favicon.svg') }}?v=2">
     </head>
     <body>
 
 <div class="container">
     <div class="header-wrapper">
+    <div class="brand-box">
+        <!-- ПОЛНОСТЬЮ ИСПРАВЛЕННЫЙ, ОТЦЕНТРИРОВАННЫЙ SVG ЛОГОТИП -->
+        <svg class="main-logo" xmlns="http://w3.org" viewBox="0 0 512 512" width="100%" height="100%">
+            <defs>
+                <style>
+                    .logo-sheet { fill: #D2E3FC; transition: fill 0.3s; }
+                    .logo-corner { fill: #A8C7FA; transition: fill 0.3s; }
+                    .logo-text-utm { fill: #103F8A; transition: fill 0.3s; }
+                    .logo-text-docx { fill: #FFFFFF; }
+                    @media (prefers-color-scheme: dark) {
+                        .logo-text-utm { fill: #669DF6; }
+                        .logo-sheet { fill: #E8F0FE; }
+                    }
+                </style>
+            </defs>
+
+            <!-- Лист бумаги -->
+            <path class="logo-sheet" d="M96 16h240l112 112v352c0 17.6-14.4 32-32 32H96c-17.6 0-32-14.4-32-32V48c0-17.6 14.4-32 32-32z"/>
+            
+            <!-- Загнутый уголок -->
+            <path class="logo-corner" d="M336 16v112h112L336 16z"/>
+            
+            <!-- Синяя плашка Word -->
+            <rect x="26" y="270" width="460" height="170" rx="20" fill="#185ABD"/>
+            
+            <!-- Векторы букв UTM (Сбалансированная группа) -->
+            <g class="logo-text-utm" transform="translate(4, 0)">
+                <!-- U -->
+                <path d="M125 75h22v60c0 15 8 22 18 22s18-7 18-22V75h22v60c0 28-17 42-40 42s-40-14-40-42V75z"/>
+                <!-- T -->
+                <path d="M215 75h64v20h-21v80h-22v-80h-21V75z"/>
+                <!-- M -->
+                <path d="M295 75h24l16 52 16-52h24v100h-20V110l-14 45h-12l-14-45v65h-20V75z"/>
+            </g>
+            
+            <!-- ИСПРАВЛЕНО: Геометрически отцентрированное, пропорциональное слово DOCX -->
+            <g class="logo-text-docx" transform="translate(5, 5)">
+                <!-- D -->
+                <path d="M90 315h35c20 0 32 10 32 26v16c0 16-12 26-32 26H90v-68zm22 16v36h13c6 0 10-3 10-9v-18c0-6-4-9-10-9h-13z"/>
+                <!-- O -->
+                <path d="M185 315c20 0 32 10 32 26v16c0 16-12 26-32 26s-32-12-32-26v-16c0-16 12-26 32-26zm0 16c-7 0-10 4-10 10v16c0 6 3 10 10 10s10-4 10-10v-16c0-6-3-10-10-10z"/>
+                <!-- C -->
+                <path d="M255 341c0-8 5-10 11-10s11 2 11 10h18c0-16-12-26-29-26-20 0-31 10-31 26v16c0 16 11 26 31 26 17 0 29-10 29-26h-18c0 8-5 10-11 10s-11-2-11-10v-16z"/>
+                <!-- X -->
+                <path d="M325 315h22l16 28 16-28h22l-27 39 28 41h-22l-17-30-17 30h-22l28-41-27-39z"/>
+            </g>
+        </svg>
         <h1>Автоматическая UTM-разметка DOCX статей</h1>
-        <button id="openHelpBtn">? Инструкция</button>
     </div>
+    <button id="openHelpBtn">❓ Инструкция</button>
+</div>
     <div id="helpModal" class="modal-overlay">
     <div class="modal-content">
         <h2>📋 Как пользоваться генератором?</h2>
@@ -115,6 +163,12 @@
 </div>
 
 <div id="status"></div>
+<div class="donate-footer">
+    <p>Сервис работает бесплатно и без рекламы.</p>
+    <a href="https://boosty.to/osp-scata" target="_blank" rel="noopener noreferrer" class="boosty-link">
+    <span>☕</span> Угостить автора кофе на Boosty
+    </a>
+</div>
 </div>
 <script src="{{ url_for('static', path='script.js')}}"></script>
 </body>

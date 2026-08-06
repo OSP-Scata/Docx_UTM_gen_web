@@ -191,19 +191,6 @@ button:hover {
 #closeHelpBtn:hover {
     background: #475569;
 }
-.header-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    width: 100%;
-}
-.header-wrapper h1 {
-    font-size: 24px;
-    color: #1e293b;
-    margin: 0; 
-    text-align: left;
-}
 #openHelpBtn {
     background: #e2e8f0;
     color: #475569;
@@ -303,4 +290,83 @@ button:hover {
 }
 .template-link:hover {
     text-decoration: underline;
+}
+.donate-footer {
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    text-align: center;
+    font-size: 13px;
+    color: #94a3b8;
+}
+.donate-footer p {
+    margin-bottom: 6px;
+}
+.boosty-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+}
+
+/* Иконка чашки кофе */
+.boosty-link span {
+    font-size: 14px;
+    filter: grayscale(1);
+    transition: filter 0.25s ease;
+}
+.boosty-link:hover {
+    color: #ff4f12;
+    background-color: #fff5f2;
+}
+.boosty-link:hover span {
+    filter: grayscale(0);
+}
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
+    position: relative;
+}
+
+/* Блок бренда как жесткий контейнер */
+.brand-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+    /* Создаем фиксированный отступ слева под размер логотипа (52px + 16px отступ) */
+    padding-left: 68px; 
+    min-height: 52px; /* Высота равна высоте логотипа */
+}
+
+/* ЛОГОТИП: Полная изоляция от капризов шрифта */
+.main-logo {
+    width: 52px;
+    height: 52px;
+    display: block;
+    /* Вырываем логотип из текстового потока и прижимаем к левому краю по центру */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%); /* Математически идеальный центр по вертикали */
+}
+
+/* Текст заголовка */
+.brand-box h1 {
+    font-size: 24px;
+    color: #1e293b;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    line-height: 1.2;
+    /* Принудительное выравнивание текстового блока */
+    display: inline-block;
+    vertical-align: middle;
 }

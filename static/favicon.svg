@@ -1,44 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511 512" width="100%" height="100%">
+<svg xmlns="http://w3.org" viewBox="0 0 32 32" width="100%" height="100%">
   <defs>
-    <!-- ИСПРАВЛЕНО: Правильный и рабочий импорт шрифта Montserrat (Bold) -->
     <style>
-      @import url('https://googleapis.com');
+      .icon-bg { fill: #185ABD; transition: fill 0.3s; }
+      .icon-chain { fill: #FFFFFF; }
       
-      .font-utm { font-family: 'Montserrat', sans-serif; font-weight: 700; fill: #103F8A; font-size: 120px; transition: fill 0.3s; }
-      .font-docx { font-family: 'Montserrat', sans-serif; font-weight: 700; fill: #FFFFFF; font-size: 146.667px; }
-      .bg-sheet { fill: rgb(210, 227, 252); transition: fill 0.3s; }
-      .bg-corner { fill: rgb(168, 199, 250); transition: fill 0.3s; }
-      
-      /* АДАПТАЦИЯ ПОД ТЁМНУЮ ТЕМУ ВКЛАДКИ */
       @media (prefers-color-scheme: dark) {
-        svg {
-            /* Мягкое свечение вокруг всей иконки, чтобы отделить её от черноты вкладки */
-            filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.6));
-        }
-        .font-utm {
-            /* ИСПРАВЛЕНО: Делаем буквы UTM ярко-голубыми в тёмной теме, чтобы они не слепили, но читались */
-            fill: #4285F4; 
-        }
-        .bg-sheet {
-            /* Слегка притеняем белый лист в тёмной теме, чтобы был контраст с буквами */
-            fill: rgb(232, 240, 254);
-        }
+        svg { filter: drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.8)); }
+        .icon-bg { fill: #2b78f5; }
       }
     </style>
   </defs>
 
-  <!-- Лист бумаги (Добавлен класс bg-sheet) -->
-  <path class="bg-sheet" fill-rule="evenodd" d="M81.0,0.0 L328.999,0.0 L454.999,127.0 L454.999,479.0 C454.999,497.225 440.225,511.999 421.999,511.999 L81.0,511.999 C62.774,511.999 48.0,497.225 48.0,479.0 L48.0,32.999 C48.0,14.774 62.774,0.0 81.0,0.0 Z"/>
+  <!-- Синяя плашка в форме закругленного документа Word -->
+  <rect class="icon-bg" x="2" y="2" width="28" height="28" rx="6" />
   
-  <!-- Загнутый уголок (Добавлен класс bg-corner) -->
-  <path class="bg-corner" fill-rule="evenodd" d="M328.999,126.999 L328.999,0.0 L455.0,126.999 L328.999,126.999 Z"/>
-  
-  <!-- Синяя плашка -->
-  <path fill-rule="evenodd" fill="rgb(24, 90, 189)" d="M15.0,256.0 L495.999,256.0 C504.284,256.0 511.0,262.715 511.0,271.0 L511.0,445.999 C511.0,454.284 504.284,460.999 495.999,460.999 L15.0,460.999 C6.715,460.999 0.0,454.284 0.0,445.999 L0.0,271.0 C0.0,262.715 6.715,256.0 15.0,256.0 Z"/>
-  
-  <!-- Текст UTM -->
-  <text x="119" y="221.04" class="font-utm">UTM</text>
-  
-  <!-- Текст DOCX -->
-  <text x="41" y="395.16" class="font-docx">DOCX</text>
+  <!-- Загнутый декоративный уголок листа (крупный, не потеряется) -->
+  <path d="M22 2 L30 10 L22 10 Z" fill="rgba(255,255,255,0.4)" />
+
+  <!-- Жирный, четкий векторный символ UTM-ссылки (звено цепи) по центру -->
+  <g class="icon-chain" transform="translate(4, 5) scale(0.85)">
+    <path d="M10.5 13.5c-.3 0-.5-.1-.7-.3l-3-3c-.4-.4-.4-1 0-1.4l3-3c.4-.4 1-.4 1.4 0s.4 1 0 1.4L9.4 11h3.1c.6 0 1-.4 1-1V5.5c0-.6-.4-1-1-1H7c-1.9 0-3.5 1.6-3.5 3.5v5c0 1.9 1.6 3.5 3.5 3.5h3.5c.6 0 1-.4 1-1s-.4-1-1-1h-3.5c-.8 0-1.5-.7-1.5-1.5v-5c0-.8.7-1.5 1.5-1.5h4.1v2.1c0 1.7 1.3 3 3 3h5.6c1.7 0 3-1.3 3-3v-5c0-1.7-1.3-3-3-3h-3.5c-.6 0-1 .4-1 1s.4 1 1 1h3.5c.6 0 1 .4 1 1v5c0 .6-.4 1-1 1h-5.6l1.8-1.8c.4-.4 4-1 0-1.4s-1-.4-1.4 0l-3 3c-.2.2-.3.4-.3.7z"/>
+  </g>
 </svg>
