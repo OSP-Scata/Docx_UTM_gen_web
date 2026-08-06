@@ -138,10 +138,8 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
     находит гиперссылки и обновляет их через функцию modify_url.
     """
     doc = Document(input_path)
-
-    # Разметка скрытых связей документа (основной массив гиперссылок в Word)
     rels = doc.part.rels
-    for rel in rels:
+    for rel_id, rel in rels.items():
         if rel.reltype == RT.HYPERLINK:
             new_url = modify_url(
                 source_url=rel.target_ref,
@@ -153,7 +151,7 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
             )
             rel._target = new_url
 
-    # Разметка текстовых полей параграфов и таблиц (для защиты структуры документа)
+    # Разметка текстовых полей параграфов и таблиц
     for p in doc.paragraphs:
         if "hyperlink" in p._element.xml:
             for node in p._element.xpath(".//w:hyperlink"):
@@ -188,6 +186,7 @@ def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, co
                                     term=term
                                 )
                                 node_rel._target = new_url
+
     doc.save(output_path)
 
 
@@ -248,9 +247,21 @@ async def generate_utm_api(
     if file.size > MAX_FILE_SIZE:
         raise HTTPException(
             status_code=status.HTTP_413_CONTENT_TOO_LARGE, detail="Файл слишком большой. Не более 10 МБ.")
-    if file.content_type != VALID_MIME_TYPE:
+    if not file.filename.lower().endswith(".docx"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Некорректное расширение файла. Требуется .docx")
+
+    # Проверка магических байтов (Сигнатура ZIP/DOCX)
+    # Считываем первые два байта файла, не загружая его целиком в память
+    header_bytes = file.file.read(2)
+    file.file.seek(0)
+    if header_bytes != b"PK":
+        logger.error(
+            f"Атака? Попытка загрузить поддельный .docx файл: {file.filename}")
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Некорректный тип файла.")
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Файл поврежден или имеет некорректную структуру."
+        )
 
     session_id = f"session_{int(time.time())}"
     session_dir = os.path.join(TEMP_DIR, session_id)
