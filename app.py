@@ -18,9 +18,12 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from openpyxl import load_workbook
 from zipfile import ZipFile
 
-parser = etree.get_default_parser()
-if parser is not None:
-    parser.set_settings(resolve_entities=False, no_network=True)
+try:
+    parser = etree.get_default_parser()
+    if parser is not None:
+        parser.set_settings(resolve_entities=False, no_network=True)
+except Exception:
+    pass
 
 mimetypes.add_type("text/css", ".css")
 mimetypes.add_type("application/javascript", ".js")
