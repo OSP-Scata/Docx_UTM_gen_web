@@ -78,6 +78,7 @@ input[type="text"]:focus {
         font-weight: 600; 
         display: none; 
 }
+/* Основная кнопка */
 button { 
         width: 100%; 
         padding: 14px; 
@@ -130,6 +131,7 @@ button:hover {
 #openHelpBtn:hover {
     background: #cbd5e1;
 }
+/* Модальное окно инструкции */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -158,7 +160,6 @@ button:hover {
     color: #1e293b;
     text-align: left;
 }
-
 .instruction-text {
     font-size: 14px;
     color: #475569;
@@ -191,22 +192,7 @@ button:hover {
 #closeHelpBtn:hover {
     background: #475569;
 }
-#openHelpBtn {
-    background: #e2e8f0;
-    color: #475569;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-#openHelpBtn:hover {
-    background: #cbd5e1;
-    color: #1e293b;
-}
+/* Контейнер вкладок (одиночная/массовая загрузка) */
 .tab-container {
     display: flex;
     background: #e2e8f0;
@@ -214,6 +200,7 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 25px;
 }
+/* Переключение вкладок загрузки */
 .tab-button {
     flex: 1;
     padding: 10px;
@@ -232,12 +219,14 @@ button:hover {
     color: #1e293b;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+/* Вкладки одиночной/массовой загрузки */
 .tab-content {
     display: none;
 }
 .tab-content.active-content {
     display: block;
 }
+/* Блок с чекбоксами */
 .checkbox-grid {
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -268,6 +257,7 @@ button:hover {
 .submit-btn:hover {
     background: #2563eb;
 }
+/* Блок шаблона Excel-манифеста */
 .download-template-box {
     display: flex;
     align-items: center;
@@ -291,6 +281,7 @@ button:hover {
 .template-link:hover {
     text-decoration: underline;
 }
+/* Футер со ссылкой на поддержку автора */
 .donate-footer {
     margin-top: 35px;
     padding-top: 20px;
@@ -326,6 +317,7 @@ button:hover {
 .boosty-link:hover span {
     filter: grayscale(0);
 }
+/* Блок-враппер заголовка (там логотип, основной заголовок и кнопка инструкции) */
 .header-wrapper {
     display: flex;
     justify-content: space-between;
@@ -342,7 +334,7 @@ button:hover {
     padding-left: 68px; 
     min-height: 52px;
 }
-/* ЛОГОТИП: Полная изоляция от капризов шрифта */
+/* ЛОГОТИП: Полная изоляция от капризов шрифта (уже не нужно, потому что шрифт в кривых) */
 .main-logo {
     width: 52px;
     height: 52px;
