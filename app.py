@@ -5,6 +5,7 @@ import re
 import logging
 import mimetypes
 
+from lxml import etree
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, Form, \
     HTTPException, status, Request, BackgroundTasks
@@ -16,6 +17,10 @@ from docx import Document
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from openpyxl import load_workbook
 from zipfile import ZipFile
+
+parser = etree.get_default_parser()
+if parser is not None:
+    parser.set_settings(resolve_entities=False, no_network=True)
 
 mimetypes.add_type("text/css", ".css")
 mimetypes.add_type("application/javascript", ".js")
@@ -29,28 +34,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-
-
-def cyrillic_to_latin(text: str) -> str:
-    text = text.strip().lower()
-    # Словарь соответствия русских и английских букв (ГОСТ-ориентированный)
-    rules = {
-        "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
-        "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
-        "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
-        "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
-        "ы": "y", "э": "e", "ю": "yu", "я": "ya", "ъ": "", "ь": ""
-    }
-    output = []
-    for char in text:
-        if char in rules:
-            output.append(rules[char])
-        else:
-            output.append(char)
-    translated_text = "".join(output)
-    translated_text = translated_text.replace(" ", "_").replace("-", "_")
-    translated_text = re.sub(r"[^a-z0-9_]", "", translated_text)
-    return translated_text if translated_text else "campaign"
 
 
 @asynccontextmanager
@@ -85,8 +68,31 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 TEMP_DIR = "web_tmp"
 MAX_FILE_SIZE = 10 * 1024 * 1024
+MAX_UNZIP_SIZE = 50 * 1024 * 1024
 VALID_MIME_TYPE = "application/vnd.openxmlformats-officedocument.\
     wordprocessingml.document"
+
+
+def cyrillic_to_latin(text: str) -> str:
+    text = text.strip().lower()
+    # Словарь соответствия русских и английских букв (ГОСТ-ориентированный)
+    rules = {
+        "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+        "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+        "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+        "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
+        "ы": "y", "э": "e", "ю": "yu", "я": "ya", "ъ": "", "ь": ""
+    }
+    output = []
+    for char in text:
+        if char in rules:
+            output.append(rules[char])
+        else:
+            output.append(char)
+    translated_text = "".join(output)
+    translated_text = translated_text.replace(" ", "_").replace("-", "_")
+    translated_text = re.sub(r"[^a-z0-9_]", "", translated_text)
+    return translated_text if translated_text else "campaign"
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -213,6 +219,11 @@ async def generate_utm_api(
     custom_platform: str = Form(None),
     file: UploadFile = File(...)
 ):
+    if len(campaign_name) > 100 or (custom_platform and len(custom_platform) > 100):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Превышена максимальная длина текстовых полей (макс. 100 символов)."
+        )
     clean_campaign = cyrillic_to_latin(campaign_name)
     chosen_medium = custom_medium if utm_medium == "custom" else utm_medium
     clean_medium = cyrillic_to_latin(
@@ -338,7 +349,17 @@ async def generate_utm_batch_api(
     with open(zip_path, "wb") as buffer:
         shutil.copyfileobj(zip_file.file, buffer)
 
-    with ZipFile(zip_path, "r") as zip_ref:
+    with ZipFile(zip_path, 'r') as zip_ref:
+        total_size = sum(zinfo.file_size for zinfo in zip_ref.infolist())
+
+        if total_size > MAX_UNZIP_SIZE:
+            logger.error(
+                f"Блокировка ZIP-бомбы! Заявленный размер распаковки: {total_size} байт")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Архив отклонен: превышен лимит распакованных данных (макс. 50 МБ)."
+            )
+
         zip_ref.extractall(extracted_dir)
 
     try:
@@ -347,15 +368,24 @@ async def generate_utm_batch_api(
         created_files = []
 
         for row in sheet.iter_rows(min_row=2, values_only=True):
-            if not row or not row[0]:
+            if not row or not row[0] or not row[1]:
                 continue
 
             filename = str(row[0]).strip()
             campaign_raw = str(row[1]).strip()
-            sources_raw = str(row[2]).strip()
-            medium_raw = str(row[3]).strip()
-            content_raw = str(row[4]).strip()
-            term_raw = str(row[5]).strip()
+            sources_raw = str(row[2]).strip() if row[2] else 'vk,telegram'
+            medium_raw = str(row[3]).strip() if row[3] else 'article'
+            content_raw = str(row[4]).strip() if row[4] else ''
+            term_raw = str(row[5]).strip() if row[5] else ''
+
+            text_fields = [campaign_raw, sources_raw,
+                           medium_raw, content_raw, term_raw]
+            if any(len(str(field)) > 100 for field in text_fields):
+                logger.warning(
+                    f"Пропуск подозрительной строки в Excel для файла {filename}."
+                    f"Обнаружено превышение длины полей (макс. 100 симв.)."
+                )
+                continue
 
             clean_campaign = cyrillic_to_latin(campaign_raw)
             platforms = [cyrillic_to_latin(
