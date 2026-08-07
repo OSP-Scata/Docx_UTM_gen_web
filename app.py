@@ -1,6 +1,6 @@
 import os
 import shutil
-import time
+import uuid
 import re
 import logging
 import mimetypes
@@ -263,7 +263,7 @@ async def generate_utm_api(
             detail="Файл поврежден или имеет некорректную структуру."
         )
 
-    session_id = f"session_{int(time.time())}"
+    session_id = f"single_{uuid.uuid4()}"
     session_dir = os.path.join(TEMP_DIR, session_id)
     os.makedirs(session_dir, exist_ok=True)
 
@@ -322,7 +322,7 @@ async def generate_utm_batch_api(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Архив файлов должен быть в формате .zip")
 
-    session_id = f"batch_{int(time.time())}"
+    session_id = f"batch_{uuid.uuid4()}"
     session_dir = os.path.join(TEMP_DIR, session_id)
 
     extracted_dir = os.path.join(session_dir, "extracted")
