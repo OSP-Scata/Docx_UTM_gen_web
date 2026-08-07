@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (input && nameDiv) {
             input.onchange = function(e) {
                 if (e.target.files.length > 0) {
-                    nameDiv.innerText = prefixText + e.target.files[0].name; // ИСПРАВЛЕНО: .files[0].name для корректного чтения имени файла
+                    nameDiv.innerText = prefixText + e.target.files[0].name;
                     nameDiv.style.display = 'block';
                 }
             };
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
-     // выпадающий список utm_medium
+     // Выпадающий список utm_medium
     const mediumSelect = document.getElementById('medium');
     const customMediumInput = document.getElementById('custom_medium');
     
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // спойлер доп.параметров
+    // Спойлер доп.параметров
     const spoilerBtn = document.getElementById('spoilerBtn');
     const spoilerContent = document.getElementById('spoilerContent');
     
