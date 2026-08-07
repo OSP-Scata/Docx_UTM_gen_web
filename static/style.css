@@ -20,6 +20,7 @@ body {
         padding: 40px;
         width: 100%;
         max-width: 500px;
+        position: relative;
 }
 h1 {
         font-size: 24px;
@@ -127,6 +128,10 @@ button:hover {
     cursor: pointer;
     font-weight: 500;
     transition: background 0.2s;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
 }
 #openHelpBtn:hover {
     background: #cbd5e1;
@@ -380,4 +385,13 @@ button:hover {
 }
 .spoiler-title:hover {
     color: #1d4ed8;
+}
+/* Позиционирование на смартфонах */
+@media (max-width: 480px) {
+    .instruction-btn {
+        position: static;
+        display: block;
+        margin: 10px auto 20px auto;
+        width: fit-content;
+    }
 }
