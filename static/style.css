@@ -19,7 +19,7 @@ body {
         box-shadow: 0 8px 24px rgba(0,0,0,0.05);
         padding: 40px;
         width: 100%;
-        max-width: 500px;
+        max-width: 640px;
         position: relative;
 }
 h1 {
@@ -349,7 +349,7 @@ button:hover {
 .brand-box h1 {
     font-size: 24px;
     line-height: 1.2;
-    max-width: 240px;
+    max-width: 360px;
     color: #1e293b;
 }
 /* Селект для дополнительных параметров */
@@ -380,6 +380,10 @@ button:hover {
 }
 /* Позиционирование на смартфонах */
 @media (max-width: 480px) {
+    .container {
+        max-width: 500px;
+        padding: 40px;
+    }
     .header-wrapper {
         flex-direction: column;
         align-items: center;
@@ -390,6 +394,7 @@ button:hover {
         width: 100%;
     }
     .brand-box h1 {
+        max-width: 280px;
         text-align: left;
     }
     #openHelpBtn {
