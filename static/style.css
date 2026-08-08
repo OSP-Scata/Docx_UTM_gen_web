@@ -323,14 +323,20 @@ button:hover {
     filter: grayscale(0);
 }
 /* Блок-враппер заголовка (там логотип, основной заголовок и кнопка инструкции) */
-.header-wrapper {
+.header-wrapper, .header-left {
     display: flex !important;
     flex-direction: row !important;
     justify-content: space-between !important;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     width: 100% !important;
     position: relative;
+}
+/* Лого + заголовок */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 /* Блок бренда как жесткий контейнер */
 .brand-box {
