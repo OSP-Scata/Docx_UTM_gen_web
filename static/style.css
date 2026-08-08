@@ -322,29 +322,26 @@ button:hover {
 .boosty-link:hover span {
     filter: grayscale(0);
 }
-/* Блок-враппер заголовка (там логотип, основной заголовок и кнопка инструкции) */
-.header-wrapper, .header-left {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100% !important;
-    position: relative;
-}
-/* Лого + заголовок */
-.header-left {
+/* Блок-враппер заголовка (там логотип, основной заголовок и кнопка инструкции);
+Шапка: логотип + заголовок слева, инструкция справа */
+.header-wrapper {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
 }
-/* Блок бренда как жесткий контейнер */
+/* Логотип + заголовок */
 .brand-box {
     display: flex;
     align-items: center;
     position: relative;
-    padding-left: 68px; 
+    padding-left: 68px;
     min-height: 52px;
+    flex: 1;
+    min-width: 0;
 }
 /* ЛОГОТИП: Полная изоляция от капризов шрифта (уже не нужно, потому что шрифт в кривых) */
 .main-logo {
