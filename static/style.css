@@ -116,8 +116,10 @@ button:hover {
     text-align: right;
     margin-bottom: -20px;
 }
+/* Кнопка инструкции */
 #openHelpBtn {
     width: auto;
+    flex-shrink: 0;
     padding: 6px 12px;
     font-size: 13px;
     background: #e2e8f0;
@@ -128,10 +130,7 @@ button:hover {
     cursor: pointer;
     font-weight: 500;
     transition: background 0.2s;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
+    position: static;
 }
 #openHelpBtn:hover {
     background: #cbd5e1;
@@ -326,43 +325,32 @@ button:hover {
 Шапка: логотип + заголовок слева, инструкция справа */
 .header-wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 12px;
     width: 100%;
-    position: relative;
+    margin-bottom: 20px;
 }
 /* Логотип + заголовок */
 .brand-box {
     display: flex;
     align-items: center;
-    position: relative;
-    padding-left: 68px;
-    min-height: 52px;
+    gap: 15px;
     flex: 1;
     min-width: 0;
 }
-/* ЛОГОТИП: Полная изоляция от капризов шрифта (уже не нужно, потому что шрифт в кривых) */
+/* Логотип */
 .main-logo {
     width: 52px;
     height: 52px;
     display: block;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
 }
 /* Текст заголовка */
 .brand-box h1 {
     font-size: 24px;
-    color: #1e293b;
-    margin: 0;
-    padding: 0;
-    text-align: left;
     line-height: 1.2;
-    display: inline-block;
-    vertical-align: middle;
+    max-width: 240px;
+    color: #1e293b;
 }
 /* Селект для дополнительных параметров */
 .styled-select {
@@ -397,12 +385,15 @@ button:hover {
         align-items: center;
         text-align: center;
     }
+    .brand-box {
+        justify-content: center;
+        width: 100%;
+    }
+    .brand-box h1 {
+        text-align: left;
+    }
     #openHelpBtn {
-        position: static !important;
-        display: block !important;
-        width: fit-content !important;
-        margin: 15px auto 5px auto !important;
-        padding: 6px 12px;
-        font-size: 13px;
+        position: static;
+        margin: 0 auto;
     }
 }
