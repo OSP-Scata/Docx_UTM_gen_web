@@ -7,6 +7,31 @@
         <title>Генератор UTM-меток для файлов Word (.docx) онлайн</title>
         <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
         <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='favicon.svg') }}?v=2">
+        <style>
+    @media screen and (max-width: 480px) {
+        html body .main-container .instruction-btn,
+        html body .instruction-btn,
+        .main-container button.instruction-btn {
+            position: static !important;
+            display: block !important;
+            margin: 15px auto 10px auto !important;
+            width: fit-content !important;
+            top: auto !important;
+            right: auto !important;
+            left: auto !important;
+            transform: none !important;
+        }
+        .header-block, 
+        .main-container h1,
+        header {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            width: 100% !important;
+        }
+    }
+</style>
     </head>
     <body>
 
