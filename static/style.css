@@ -389,12 +389,12 @@ button:hover {
 /* Позиционирование на смартфонах */
 @media (max-width: 480px) {
     .instruction-btn {
-        position: static; 
-        display: inline-flex;
+        position: static !important; 
+        display: block !important;
         align-items: center;
         justify-content: center;
-        margin: 15px auto 5px auto;
-        width: fit-content;
+        margin: 15px auto 5px auto !important;
+        width: fit-content !important;
         padding: 6px 12px;
         font-size: 13px;
     }
