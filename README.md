@@ -4,6 +4,7 @@
 
 ## 🚀 Живой демо-стенд
 Сервис развернут в Docker-контейнере на личном VDS, защищённом Trycloudflare:
+
 👉 **[Попробовать генератор тут](https://producer-privilege-dom-ours.trycloudflare.com/)**
 
 ## 🛠️ Что умеет сервис
