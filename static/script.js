@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openHelpBtn && helpModal && closeHelpBtn && helpSingleText && helpBatchText && singleBlock) {
         openHelpBtn.onclick = function(e) {
             e.preventDefault();
-            
+            document.body.classList.add('modal-open');
             // Проверяем, какой блок сейчас отображается на экране
             if (singleBlock.classList.contains('active-content')) {
                 helpSingleText.style.display = 'block';
@@ -38,11 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         closeHelpBtn.onclick = function(e) {
             e.preventDefault();
+            document.body.classList.remove('modal-open');
             helpModal.style.display = 'none';
         };
 
         helpModal.onclick = function(e) {
             if (e.target === helpModal) {
+                document.body.classList.remove('modal-open');
                 helpModal.style.display = 'none';
             }
         };

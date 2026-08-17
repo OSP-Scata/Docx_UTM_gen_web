@@ -1,404 +1,493 @@
-* { 
-        box-sizing: border-box; 
-        margin: 0; 
-        padding: 0; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-body { 
-        background-color: #f4f6f9;
-        color: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
+body {
+  background-color: #f4f6f9;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+body.modal-open {
+  overflow: hidden;
 }
 .container {
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-        padding: 40px;
-        width: 100%;
-        max-width: 640px;
-        position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+  width: 100%;
+  max-width: 640px;
+  position: relative;
 }
 h1 {
-        font-size: 24px;
-        margin-bottom: 8px;
-        color: #1e293b;
-        text-align: center;
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #1e293b;
+  text-align: center;
 }
 p.subtitle {
-        text-align: center;
-        color: #64748b;
-        font-size: 14px;
-        margin-bottom: 30px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 30px;
 }
-.form-group { margin-bottom: 20px; }
+.form-group {
+  margin-bottom: 20px;
+}
 label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #475569;
-        font-size: 14px;
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
 }
-input[type="text"] { 
-        width: 100%; 
-        padding: 12px; 
-        border: 1px solid #cbd5e1; 
-        border-radius: 6px; 
-        font-size: 15px; 
-        transition: border 0.2s; 
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border 0.2s;
 }
-input[type="text"]:focus { 
-        outline: none; 
-        border-color: #3b82f6; 
-        box-shadow: 0 0 0 3px rgba(59,130,246,0.1); 
+input[type="text"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
-.file-upload { 
-        border: 2px dashed #cbd5e1; 
-        border-radius: 8px; 
-        padding: 30px 20px; 
-        text-align: center; 
-        cursor: pointer; background: #f8fafc; 
-        transition: all 0.2s; 
+.file-upload {
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: all 0.2s;
 }
-.file-upload:hover { 
-        border-color: #3b82f6; 
-        background: #f0fdf4; 
+.file-upload:hover {
+  border-color: #3b82f6;
+  background: #f0fdf4;
 }
-.file-upload input[type="file"] { display: none; }
-.file-upload-text { 
-        color: #64748b; 
-        font-size: 14px; 
+.file-upload input[type="file"] {
+  display: none;
 }
-.file-name { 
-        margin-top: 10px; 
-        font-size: 14px; 
-        color: #10b981; 
-        font-weight: 600; 
-        display: none; 
+.file-upload-text {
+  color: #64748b;
+  font-size: 14px;
+}
+.file-name {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #10b981;
+  font-weight: 600;
+  display: none;
 }
 /* Основная кнопка */
-button { 
-        width: 100%; 
-        padding: 14px; 
-        background: #3b82f6; 
-        color: white; 
-        border: none; 
-        border-radius: 6px; 
-        font-size: 16px; 
-        font-weight: 600; 
-        cursor: pointer; 
-        transition: background 0.2s; 
-        margin-top: 10px; 
+button {
+  width: 100%;
+  padding: 14px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
 }
-button:hover { 
-        background: #2563eb; 
+button:hover {
+  background: #2563eb;
 }
-#status { 
-        margin-top: 20px; 
-        padding: 12px; 
-        border-radius: 6px; 
-        font-size: 14px; 
-        text-align: center; 
-        display: none; 
+/* Всплывающий блок статуса обработки */
+#status {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  display: none;
 }
-.error { 
-        background: #fee2e2; 
-        color: #991b1b; 
+.error {
+  background: #fee2e2;
+  color: #991b1b;
 }
-.success { 
-        background: #dcfce7; 
-        color: #166534; 
+.success {
+  background: #dcfce7;
+  color: #166534;
 }
 .help-btn-wrapper {
-    text-align: right;
-    margin-bottom: -20px;
+  text-align: right;
+  margin-bottom: -20px;
 }
 /* Кнопка инструкции */
 #openHelpBtn {
-    width: auto;
-    flex-shrink: 0;
-    padding: 6px 12px;
-    font-size: 13px;
-    background: #e2e8f0;
-    color: #475569;
-    margin: 0;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.2s;
-    position: static;
+  width: auto;
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-size: 13px;
+  background: #e2e8f0;
+  color: #475569;
+  margin: 0;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+  position: static;
 }
 #openHelpBtn:hover {
-    background: #cbd5e1;
+  background: #cbd5e1;
 }
 /* Модальное окно инструкции */
 .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(15, 23, 42, 0.6); 
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 9999; 
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 9999;
+  overflow: hidden;
 }
+/* Белая плашка-основа */
 .modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 450px;
-    width: 100%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 450px;
+  max-height: 90vh;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0 25px 0;
+  box-sizing: border-box;
+}
+/* Контейнер для скролла текста */
+.modal-scroll-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 30px;
+  box-sizing: border-box;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) calc(100% - 60px),
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: local;
+  /* Тонкий скроллбар для Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.spacer {
+  height: 50px;
+  width: 100%;
+  pointer-events: none;
+}
+.modal-content::after {
+  content: "";
+  position: absolute;
+  bottom: 75px;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+/* Стилизация скроллбара для Chrome, Safari, Edge */
+.modal-scroll-container::-webkit-scrollbar {
+  width: 14px;
+}
+.modal-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  background-clip: padding-box;
+  border: 4px solid transparent;
+  border-radius: 10px;
+}
+.modal-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+.modal-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 .modal-content h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #1e293b;
-    text-align: left;
+  font-size: 20px;
+  margin-bottom: 15px;
+  margin-top: 20px;
+  color: #1e293b;
+  text-align: left;
+}
+.modal-scroll-container > h2:first-child {
+  margin-top: 0;
 }
 .instruction-text {
-    font-size: 14px;
-    color: #475569;
-    line-height: 1.6;
-    text-align: left;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+  text-align: left;
 }
 .instruction-text p {
-    margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .instruction-text code {
-    background: #f1f5f9;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    color: #0f172a;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #0f172a;
+  font-size: 13px;
 }
 .security-note {
-    font-size: 12px;
-    color: #64748b;
-    background: #f8fafc;
-    padding: 8px;
-    border-radius: 4px;
-    border-left: 3px solid #3b82f6;
-    margin-top: 15px;
+  font-size: 12px;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #3b82f6;
+  margin-top: 15px;
 }
+
+/* Фиксированная кнопка закрытия */
 #closeHelpBtn {
-    background: #64748b;
-    margin-top: 20px;
+  background: #64748b;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 20px 30px 0 30px; /* Отступы вокруг кнопки */
+  align-self: center;
+  width: calc(100% - 60px); /* Кнопка растягивается по ширине контента */
+  box-sizing: border-box;
+  transition: background 0.2s ease;
 }
 #closeHelpBtn:hover {
-    background: #475569;
+  background: #475569;
 }
 /* Контейнер вкладок (одиночная/массовая загрузка) */
 .tab-container {
-    display: flex;
-    background: #e2e8f0;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 25px;
+  display: flex;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 25px;
 }
 /* Переключение вкладок загрузки */
 .tab-button {
-    flex: 1;
-    padding: 10px;
-    background: none;
-    border: none;
-    color: #475569;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-    margin: 0 !important;
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #475569;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  margin: 0 !important;
 }
 .tab-button.active {
-    background: #ffffff;
-    color: #1e293b;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 /* Вкладки одиночной/массовой загрузки */
 .tab-content {
-    display: none;
+  display: none;
 }
 .tab-content.active-content {
-    display: block;
+  display: block;
 }
 /* Блок с чекбоксами */
 .checkbox-grid {
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px; 
-    margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .checkbox-grid label {
-    font-weight: normal;
-    color: #334155;
+  font-weight: normal;
+  color: #334155;
 }
 .hint-label {
-    font-size: 13px; 
-    color: #64748b;
+  font-size: 13px;
+  color: #64748b;
 }
 .submit-btn {
-    width: 100%; 
-    padding: 14px; 
-    background: #3b82f6; 
-    color: white; 
-    border: none; 
-    border-radius: 6px; 
-    font-size: 16px; 
-    font-weight: 600; 
-    cursor: pointer; 
-    transition: background 0.2s; 
-    margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
 }
 .submit-btn:hover {
-    background: #2563eb;
+  background: #2563eb;
 }
 /* Блок шаблона Excel-манифеста */
 .download-template-box {
-    display: flex;
-    align-items: center;
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: left;
+  display: flex;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 .template-icon {
-    font-size: 24px;
-    margin-right: 12px;
+  font-size: 24px;
+  margin-right: 12px;
 }
 .template-link {
-    color: #16a34a;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
 }
 .template-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 /* Футер со ссылкой на поддержку автора */
 .donate-footer {
-    margin-top: 35px;
-    padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
-    text-align: center;
-    font-size: 13px;
-    color: #94a3b8;
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
 }
 .donate-footer p {
-    margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 .boosty-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #64748b;
-    text-decoration: none;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
 }
 /* Иконка чашки кофе */
 .boosty-link span {
-    font-size: 14px;
-    filter: grayscale(1);
-    transition: filter 0.25s ease;
+  font-size: 14px;
+  filter: grayscale(1);
+  transition: filter 0.25s ease;
 }
 .boosty-link:hover {
-    color: #ff4f12;
-    background-color: #fff5f2;
+  color: #ff4f12;
+  background-color: #fff5f2;
 }
 .boosty-link:hover span {
-    filter: grayscale(0);
+  filter: grayscale(0);
 }
 /* Блок-враппер заголовка (там логотип, основной заголовок и кнопка инструкции);
 Шапка: логотип + заголовок слева, инструкция справа */
 .header-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 20px;
 }
 /* Логотип + заголовок */
 .brand-box {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex: 1;
-    min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 0;
 }
 /* Логотип */
 .main-logo {
-    width: 52px;
-    height: 52px;
-    display: block;
-    flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: block;
+  flex-shrink: 0;
 }
 /* Текст заголовка */
 .brand-box h1 {
-    font-size: 24px;
-    line-height: 1.2;
-    max-width: 360px;
-    color: #1e293b;
+  font-size: 24px;
+  line-height: 1.2;
+  max-width: 360px;
+  color: #1e293b;
 }
 /* Селект для дополнительных параметров */
 .styled-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    background-color: #ffffff;
-    color: #334155;
-    font-size: 14px;
-    outline: none;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 14px;
+  outline: none;
 }
 /* Кнопка спойлера */
 .spoiler-title {
-    background: none;
-    border: none;
-    color: #3b82f6;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
-    margin-top: 10px;
-    text-align: left;
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 10px;
+  text-align: left;
 }
 .spoiler-title:hover {
-    color: #1d4ed8;
+  color: #1d4ed8;
 }
 /* Позиционирование на смартфонах */
 @media (max-width: 480px) {
-    .container {
-        max-width: 500px;
-        padding: 40px;
-    }
-    .header-wrapper {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .brand-box {
-        justify-content: center;
-        width: 100%;
-    }
-    .brand-box h1 {
-        max-width: 280px;
-        text-align: left;
-    }
-    #openHelpBtn {
-        position: static;
-        margin: 0 auto;
-    }
+  .container {
+    max-width: 500px;
+    padding: 40px;
+  }
+  .header-wrapper {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .brand-box {
+    justify-content: center;
+    width: 100%;
+  }
+  .brand-box h1 {
+    max-width: 280px;
+    text-align: left;
+  }
+  #openHelpBtn {
+    position: static;
+    margin: 0 auto;
+  }
 }

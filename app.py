@@ -71,7 +71,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 TEMP_DIR = "web_tmp"
 MAX_FILE_SIZE = 10 * 1024 * 1024
-MAX_UNZIP_SIZE = 50 * 1024 * 1024
+MAX_UNZIP_SIZE = 100 * 1024 * 1024
 VALID_MIME_TYPE = "application/vnd.openxmlformats-officedocument.\
     wordprocessingml.document"
 
