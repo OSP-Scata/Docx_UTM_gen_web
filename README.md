@@ -71,4 +71,4 @@ docker run -d -p 8080:8000 --name my-utm-site --restart always utm-service
 ```
 
 ---
-**Контакты:** Lemniscata/OSP-Scata. Python-разработчик и SMM-аналитик. Пишу скрипты автоматизации и Telegram-ботов для бизнеса. Связь в Telegram: @OSPscata
+**Контакты:** Lemniscata/OSP-Scata. Python-разработчик и SMM-аналитик. Пишу скрипты автоматизации и простых Telegram-ботов для бизнеса. Связь в Telegram: @OSPscata
