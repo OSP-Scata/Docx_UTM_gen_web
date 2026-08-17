@@ -4,7 +4,7 @@ import uuid
 import re
 import logging
 import mimetypes
-
+from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 from lxml import etree
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, Form, \
@@ -12,7 +12,6 @@ from fastapi import FastAPI, UploadFile, File, Form, \
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
 from docx import Document
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from openpyxl import load_workbook
@@ -112,34 +111,63 @@ async def favicon():
     )
 
 
-def modify_url(source_url: str, campaign: str, source: str, medium: str, content: str, term: str) -> str:
-    """Принимает оригинальный URL и безопасно приклеивает к нему только 
-    заполненные UTM-параметры, учитывая наличие существующих GET-компонентов.
+def modify_url(
+    source_url: str,
+    campaign: str,
+    source: str,
+    medium: str,
+    content: str,
+    term: str
+) -> str:
+    """Добавляет/обновляет UTM-параметры в URL.
+
+    Существующие обычные GET-параметры сохраняются.
+    Старые UTM-параметры заменяются новыми.
+    URL-фрагмент (#...) сохраняется на своём месте.
     """
     source_url = source_url.strip()
     if not source_url:
         return source_url
-
-    params = [
-        f"utm_source={source}",
-        f"utm_medium={medium}",
-        f"utm_campaign={campaign}"
+    parsed = urlsplit(source_url)
+    existing_params = parse_qsl(
+        parsed.query,
+        keep_blank_values=True
+    )
+    managed_utm = {
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content",
+        "utm_term"
+    }
+    preserved_params = [
+        (key, value)
+        for key, value in existing_params
+        if key.lower() not in managed_utm
     ]
-
+    new_params = [
+        ("utm_source", source),
+        ("utm_medium", medium),
+        ("utm_campaign", campaign)
+    ]
     if content and content.strip():
-        params.append(f"utm_content={content.strip()}")
+        new_params.append(
+            ("utm_content", content.strip())
+        )
     if term and term.strip():
-        params.append(f"utm_term={term.strip()}")
-
-    utm_string = "&".join(params)
-
-    if "?" in source_url:
-        if source_url.endswith("?") or source_url.endswith("&"):
-            return f"{source_url}{utm_string}"
-        else:
-            return f"{source_url}&{utm_string}"
-    else:
-        return f"{source_url}?{utm_string}"
+        new_params.append(
+            ("utm_term", term.strip())
+        )
+    query = urlencode(
+        preserved_params + new_params
+    )
+    return urlunsplit((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        query,
+        parsed.fragment
+    ))
 
 
 def add_utm_to_docx(input_path: str, campaign: str, source: str, medium: str, content: str, term: str, output_path: str):
