@@ -1,0 +1,32 @@
+name: Deploy to VDS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Executing remote SSH commands to deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd Docx_UTM_gen_web
+            git pull origin main
+            docker build --no-cache -t utm-service .
+            docker rm -f my-utm-site
+            docker run -d \
+              -p 127.0.0.1:8085:8000 \
+              --name my-utm-site \
+              --restart always \
+              utm-service
+            sudo systemctl restart nginx
