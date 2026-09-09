@@ -73,22 +73,21 @@ MAX_FILE_SIZE = 10 * 1024 * 1024
 MAX_UNZIP_SIZE = 100 * 1024 * 1024
 VALID_MIME_TYPE = "application/vnd.openxmlformats-officedocument.\
     wordprocessingml.document"
+TRANSLIT_DICT = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+    "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+    "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+    "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
+    "ы": "y", "э": "e", "ю": "yu", "я": "ya", "ъ": "", "ь": ""
+}
 
 
 def cyrillic_to_latin(text: str) -> str:
     text = text.strip().lower()
-    # Словарь соответствия русских и английских букв (ГОСТ-ориентированный)
-    rules = {
-        "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
-        "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
-        "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
-        "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
-        "ы": "y", "э": "e", "ю": "yu", "я": "ya", "ъ": "", "ь": ""
-    }
     output = []
     for char in text:
-        if char in rules:
-            output.append(rules[char])
+        if char in TRANSLIT_DICT:
+            output.append(TRANSLIT_DICT[char])
         else:
             output.append(char)
     translated_text = "".join(output)
