@@ -50,7 +50,7 @@
 
 1. Клонировать репозиторий:
    ```bash
-   git clone https://github.com
+   git clone https://github.com/OSP-Scata/Docx_UTM_gen_web
    cd название_репозитория
    ```
 2. Установить зависимости:
